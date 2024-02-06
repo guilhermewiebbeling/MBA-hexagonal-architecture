@@ -11,7 +11,7 @@ public class CreateCustomerUseCase extends UseCase<CreateCustomerUseCase.Input, 
 
     private final CustomerService customerService;
 
-    public CreateCustomerUseCase(CustomerService customerService) {
+    public CreateCustomerUseCase(final CustomerService customerService) {
         this.customerService = Objects.requireNonNull(customerService);
     }
 

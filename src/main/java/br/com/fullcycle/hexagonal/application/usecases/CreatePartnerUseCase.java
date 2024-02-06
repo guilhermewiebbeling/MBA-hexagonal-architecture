@@ -4,7 +4,6 @@ import br.com.fullcycle.hexagonal.application.UseCase;
 import br.com.fullcycle.hexagonal.application.exceptions.ValidationException;
 import br.com.fullcycle.hexagonal.models.Partner;
 import br.com.fullcycle.hexagonal.services.PartnerService;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Objects;
 
@@ -12,7 +11,7 @@ public class CreatePartnerUseCase extends UseCase<CreatePartnerUseCase.Input, Cr
 
     private final PartnerService partnerService;
 
-    public CreatePartnerUseCase(PartnerService partnerService) {
+    public CreatePartnerUseCase(final PartnerService partnerService) {
         this.partnerService = Objects.requireNonNull(partnerService);
     }
 
