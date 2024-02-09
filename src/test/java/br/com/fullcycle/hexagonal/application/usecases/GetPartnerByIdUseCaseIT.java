@@ -1,27 +1,38 @@
 package br.com.fullcycle.hexagonal.application.usecases;
 
+import br.com.fullcycle.hexagonal.IntegrationTest;
 import br.com.fullcycle.hexagonal.infrastructure.models.Partner;
-import br.com.fullcycle.hexagonal.infrastructure.services.PartnerService;
+import br.com.fullcycle.hexagonal.infrastructure.repositories.PartnerRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
+class GetPartnerByIdUseCaseIT extends IntegrationTest {
 
-class GetPartnerByIdUseCaseTest {
+    @Autowired
+    private GetPartnerByIdUseCase useCase;
+
+    @Autowired
+    private PartnerRepository partnerRepository;
+
+    @BeforeEach
+    void tearDown() {
+        partnerRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Deve obter um parceiro por id")
     public void testGetById() {
         //given
-        final var expectedID = UUID.randomUUID().getMostSignificantBits();
         final var expectedCNPJ = "41536538000100";
         final var expectedEmail = "john.dutton@gmail.com";
         final var expectedName = "John Dutton";
+        final var partner = createPartner(expectedCNPJ, expectedEmail, expectedName);
+        final var expectedID = partner.getId();
 
         final var aPartner = new Partner();
         aPartner.setId(expectedID);
@@ -31,10 +42,6 @@ class GetPartnerByIdUseCaseTest {
 
         final var input = new GetPartnerByIdUseCase.Input(expectedID);
         //when
-        final var partnerSerice = Mockito.mock(PartnerService.class);
-        when(partnerSerice.findById(expectedID)).thenReturn(Optional.of(aPartner));
-
-        final var useCase = new GetPartnerByIdUseCase(partnerSerice);
         final var output = useCase.execute(input).get();
 
         //then
@@ -52,13 +59,17 @@ class GetPartnerByIdUseCaseTest {
 
         final var input = new GetPartnerByIdUseCase.Input(expectedID);
         //when
-        final var partnerSerice = Mockito.mock(PartnerService.class);
-        when(partnerSerice.findById(expectedID)).thenReturn(Optional.empty());
-
-        final var useCase = new GetPartnerByIdUseCase(partnerSerice);
         final var output = useCase.execute(input);
 
         //then
         Assertions.assertTrue(output.isEmpty());
+    }
+
+    private Partner createPartner(final String cnpj, final String email, final String name) {
+        final var aPartner = new Partner();
+        aPartner.setCnpj(cnpj);
+        aPartner.setEmail(email);
+        aPartner.setName(name);
+        return partnerRepository.save(aPartner);
     }
 }

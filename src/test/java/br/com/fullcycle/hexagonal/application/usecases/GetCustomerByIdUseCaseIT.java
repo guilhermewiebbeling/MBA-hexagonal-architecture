@@ -1,40 +1,42 @@
 package br.com.fullcycle.hexagonal.application.usecases;
 
+import br.com.fullcycle.hexagonal.IntegrationTest;
 import br.com.fullcycle.hexagonal.infrastructure.models.Customer;
-import br.com.fullcycle.hexagonal.infrastructure.services.CustomerService;
+import br.com.fullcycle.hexagonal.infrastructure.repositories.CustomerRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
 
-class GetCustomerByIdUseCaseTest {
+class GetCustomerByIdUseCaseIT extends IntegrationTest {
+
+    @Autowired
+    private GetCustomerByIdUseCase useCase;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @BeforeEach
+    void tearDown() {
+        customerRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Deve obter um cliente por id")
     public void testGetById() {
         //given
-        final var expectedID = UUID.randomUUID().getMostSignificantBits();
         final var expectedCPF = "123456789";
         final var expectedEmail = "john.dutton@gmail.com";
         final var expectedName = "John Dutton";
-
-        final var aCustomer = new Customer();
-        aCustomer.setId(expectedID);
-        aCustomer.setCpf(expectedCPF);
-        aCustomer.setEmail(expectedEmail);
-        aCustomer.setName(expectedName);
+        final var customer = createCustomer(expectedCPF, expectedEmail, expectedName);
+        final var expectedID = customer.getId();
 
         final var input = new GetCustomerByIdUseCase.Input(expectedID);
         //when
-        final var customerSerice = Mockito.mock(CustomerService.class);
-        when(customerSerice.findById(expectedID)).thenReturn(Optional.of(aCustomer));
-
-        final var useCase = new GetCustomerByIdUseCase(customerSerice);
         final var output = useCase.execute(input).get();
 
         //then
@@ -52,13 +54,17 @@ class GetCustomerByIdUseCaseTest {
 
         final var input = new GetCustomerByIdUseCase.Input(expectedID);
         //when
-        final var customerSerice = Mockito.mock(CustomerService.class);
-        when(customerSerice.findById(expectedID)).thenReturn(Optional.empty());
-
-        final var useCase = new GetCustomerByIdUseCase(customerSerice);
         final var output = useCase.execute(input);
 
         //then
         Assertions.assertTrue(output.isEmpty());
+    }
+
+    private Customer createCustomer(final String cpf, final String email, final String name) {
+        final var aCustomer = new Customer();
+        aCustomer.setCpf(cpf);
+        aCustomer.setEmail(email);
+        aCustomer.setName(name);
+        return customerRepository.save(aCustomer);
     }
 }

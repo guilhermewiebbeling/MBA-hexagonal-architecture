@@ -1,20 +1,27 @@
 package br.com.fullcycle.hexagonal.application.usecases;
 
+import br.com.fullcycle.hexagonal.IntegrationTest;
 import br.com.fullcycle.hexagonal.application.exceptions.ValidationException;
 import br.com.fullcycle.hexagonal.infrastructure.models.Partner;
-import br.com.fullcycle.hexagonal.infrastructure.services.PartnerService;
+import br.com.fullcycle.hexagonal.infrastructure.repositories.PartnerRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
-import java.util.UUID;
+public class CreatePartnerUseCaseIT extends IntegrationTest {
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+    @Autowired
+    private CreatePartnerUseCase useCase;
 
-public class CreatePartnerUseCaseTest {
+    @Autowired
+    private PartnerRepository partnerRepository;
+
+    @BeforeEach
+    void tearDown() {
+        partnerRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Deve criar um parceiro")
@@ -25,17 +32,7 @@ public class CreatePartnerUseCaseTest {
         final var expectedName = "John Dutton";
 
         final var createInput = new CreatePartnerUseCase.Input(expectedCNPJ, expectedEmail, expectedName);
-
         //when
-        final var customerSerice = Mockito.mock(PartnerService.class);
-        when(customerSerice.findByCnpj(expectedCNPJ)).thenReturn(Optional.empty());
-        when(customerSerice.findByEmail(expectedEmail)).thenReturn(Optional.empty());
-        when(customerSerice.save(any())).thenAnswer(a -> {
-            var customer = a.getArgument(0, Partner.class);
-            customer.setId(UUID.randomUUID().getMostSignificantBits());
-            return customer;
-        });
-        final var useCase = new CreatePartnerUseCase(customerSerice);
         final var output = useCase.execute(createInput);
 
         //then
@@ -54,17 +51,10 @@ public class CreatePartnerUseCaseTest {
         final var expectedName = "John Dutton";;
         final var expectedError = "Partner already exists";
 
-        final var createInput = new CreatePartnerUseCase.Input(expectedCNPJ, expectedEmail, expectedName);
-        final var aPartner = new Partner();
-        aPartner.setId(UUID.randomUUID().getMostSignificantBits());
-        aPartner.setCnpj(expectedCNPJ);
-        aPartner.setEmail(expectedEmail);
-        aPartner.setName(expectedName);
+        createPartner(expectedCNPJ, expectedEmail, expectedName);
 
+        final var createInput = new CreatePartnerUseCase.Input(expectedCNPJ, expectedEmail, expectedName);
         //when
-        final var customerSerice = Mockito.mock(PartnerService.class);
-        when(customerSerice.findByCnpj(expectedCNPJ)).thenReturn(Optional.of(aPartner));
-        final var useCase = new CreatePartnerUseCase(customerSerice);
         final var actualException = Assertions.assertThrows(ValidationException.class, () -> useCase.execute(createInput));
 
         //then
@@ -80,20 +70,22 @@ public class CreatePartnerUseCaseTest {
         final var expectedName = "John Dutton";
         final var expectedError = "Partner already exists";
 
+        createPartner("415365380001001", expectedEmail, expectedName);
+
         final var createInput = new CreatePartnerUseCase.Input(expectedCNPJ, expectedEmail, expectedName);
-        final var aPartner = new Partner();
-        aPartner.setId(UUID.randomUUID().getMostSignificantBits());
-        aPartner.setCnpj(expectedCNPJ);
-        aPartner.setEmail(expectedEmail);
-        aPartner.setName(expectedName);
 
         //when
-        final var customerSerice = Mockito.mock(PartnerService.class);
-        when(customerSerice.findByEmail(expectedEmail)).thenReturn(Optional.of(aPartner));
-        final var useCase = new CreatePartnerUseCase(customerSerice);
         final var actualException = Assertions.assertThrows(ValidationException.class, () -> useCase.execute(createInput));
 
         //then
         Assertions.assertEquals(expectedError, actualException.getMessage());
+    }
+
+    private Partner createPartner(final String cnpj, final String email, final String name) {
+        final var aPartner = new Partner();
+        aPartner.setCnpj(cnpj);
+        aPartner.setEmail(email);
+        aPartner.setName(name);
+        return partnerRepository.save(aPartner);
     }
 }
