@@ -21,8 +21,8 @@ public class CreatePartnerUseCaseTest {
     public void testCreate() {
         //given
         final var expectedCNPJ = "41536538000100";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";
 
         final var createInput = new CreatePartnerUseCase.Input(expectedCNPJ, expectedEmail, expectedName);
 
@@ -50,8 +50,8 @@ public class CreatePartnerUseCaseTest {
     public void testCreateWithDuplicatedCNPJShouldFail() throws Exception {
         //given
         final var expectedCNPJ = "41536538000100";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";;
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";;
         final var expectedError = "Partner already exists";
 
         final var createInput = new CreatePartnerUseCase.Input(expectedCNPJ, expectedEmail, expectedName);
@@ -76,8 +76,8 @@ public class CreatePartnerUseCaseTest {
     public void testCreateWithDuplicatedEmailShouldFail() throws Exception {
         //given
         final var expectedCNPJ = "41536538000100";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";
         final var expectedError = "Partner already exists";
 
         final var createInput = new CreatePartnerUseCase.Input(expectedCNPJ, expectedEmail, expectedName);

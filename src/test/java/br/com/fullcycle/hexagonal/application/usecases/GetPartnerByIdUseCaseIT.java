@@ -29,8 +29,8 @@ class GetPartnerByIdUseCaseIT extends IntegrationTest {
     public void testGetById() {
         //given
         final var expectedCNPJ = "41536538000100";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";
         final var partner = createPartner(expectedCNPJ, expectedEmail, expectedName);
         final var expectedID = partner.getId();
 

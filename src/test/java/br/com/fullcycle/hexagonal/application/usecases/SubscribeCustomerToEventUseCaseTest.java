@@ -31,8 +31,8 @@ class SubscribeCustomerToEventUseCaseTest {
         final var aCustomer = new Customer();
         aCustomer.setId(customerID);
         aCustomer.setCpf("123456789");
-        aCustomer.setEmail("john.dutton@gmail.com");
-        aCustomer.setName("John Dutton");
+        aCustomer.setEmail("john.doe@gmail.com");
+        aCustomer.setName("John Doe");
 
         final var aEvent = new Event();
         aEvent.setId(eventID);

@@ -20,8 +20,8 @@ class GetPartnerByIdUseCaseTest {
         //given
         final var expectedID = UUID.randomUUID().getMostSignificantBits();
         final var expectedCNPJ = "41536538000100";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";
 
         final var aPartner = new Partner();
         aPartner.setId(expectedID);

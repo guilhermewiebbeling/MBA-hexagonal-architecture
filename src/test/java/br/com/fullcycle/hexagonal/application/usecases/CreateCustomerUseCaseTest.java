@@ -21,8 +21,8 @@ public class CreateCustomerUseCaseTest {
     public void testCreate() {
         //given
         final var expectedCPF = "123456789";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";
 
         final var createInput = new CreateCustomerUseCase.Input(expectedCPF, expectedEmail, expectedName);
 
@@ -50,8 +50,8 @@ public class CreateCustomerUseCaseTest {
     public void testCreateWithDuplicatedCPFShouldFail() throws Exception {
         //given
         final var expectedCPF = "123456789";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";
         final var expectedError = "Customer already exists";
 
         final var createInput = new CreateCustomerUseCase.Input(expectedCPF, expectedEmail, expectedName);
@@ -76,8 +76,8 @@ public class CreateCustomerUseCaseTest {
     public void testCreateWithDuplicatedEmailShouldFail() throws Exception {
         //given
         final var expectedCPF = "123456789";
-        final var expectedEmail = "john.dutton@gmail.com";
-        final var expectedName = "John Dutton";
+        final var expectedEmail = "john.doe@gmail.com";
+        final var expectedName = "John Doe";
         final var expectedError = "Customer already exists";
 
         final var createInput = new CreateCustomerUseCase.Input(expectedCPF, expectedEmail, expectedName);
