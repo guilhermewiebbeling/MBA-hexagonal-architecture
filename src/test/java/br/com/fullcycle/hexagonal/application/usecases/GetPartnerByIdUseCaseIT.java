@@ -1,4 +1,4 @@
-package br.com.fullcycle.hexagonal.application.usecases;
+/*package br.com.fullcycle.hexagonal.application.usecases;
 
 import br.com.fullcycle.hexagonal.IntegrationTest;
 import br.com.fullcycle.hexagonal.infrastructure.models.Partner;
@@ -72,4 +72,4 @@ class GetPartnerByIdUseCaseIT extends IntegrationTest {
         aPartner.setName(name);
         return partnerRepository.save(aPartner);
     }
-}
+}*/

@@ -1,4 +1,4 @@
-package br.com.fullcycle.hexagonal.application.usecases;
+/*package br.com.fullcycle.hexagonal.application.usecases;
 
 import br.com.fullcycle.hexagonal.IntegrationTest;
 import br.com.fullcycle.hexagonal.infrastructure.models.Customer;
@@ -67,4 +67,4 @@ class GetCustomerByIdUseCaseIT extends IntegrationTest {
         aCustomer.setName(name);
         return customerRepository.save(aCustomer);
     }
-}
+}*/

@@ -1,26 +1,27 @@
 package br.com.fullcycle.hexagonal.application.usecases;
 
 import br.com.fullcycle.hexagonal.application.UseCase;
-import br.com.fullcycle.hexagonal.infrastructure.services.PartnerService;
+import br.com.fullcycle.hexagonal.application.domain.PartnerId;
+import br.com.fullcycle.hexagonal.application.repositories.PartnerRepository;
 
 import java.util.Objects;
 import java.util.Optional;
 
 public class GetPartnerByIdUseCase extends UseCase<GetPartnerByIdUseCase.Input, Optional<GetPartnerByIdUseCase.Output>> {
 
-    private final PartnerService partnerService;
+    private final PartnerRepository partnerRepository;
 
-    public GetPartnerByIdUseCase(final PartnerService partnerService) {
-        this.partnerService = Objects.requireNonNull(partnerService);
+    public GetPartnerByIdUseCase(final PartnerRepository partnerRepository) {
+        this.partnerRepository = Objects.requireNonNull(partnerRepository);
     }
 
     @Override
     public Optional<Output> execute(Input input) {
-        return partnerService.findById(input.id)
-                .map(c -> new GetPartnerByIdUseCase.Output(c.getId(), c.getCnpj(), c.getEmail(), c.getName()));
+        return partnerRepository.partnerOfId(PartnerId.with(input.id))
+                .map(c -> new GetPartnerByIdUseCase.Output(c.getPartnerId().value(), c.getCnpj().value(), c.getEmail().value(), c.getName().value()));
     }
 
-    public record Input(Long id) {}
-    public record Output(Long id, String cnpj, String email, String name) {}
+    public record Input(String id) {}
+    public record Output(String id, String cnpj, String email, String name) {}
 }    
 
