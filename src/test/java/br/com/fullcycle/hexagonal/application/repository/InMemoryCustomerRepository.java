@@ -1,7 +1,9 @@
 package br.com.fullcycle.hexagonal.application.repository;
 
-import br.com.fullcycle.hexagonal.application.domain.Customer;
-import br.com.fullcycle.hexagonal.application.domain.CustomerId;
+import br.com.fullcycle.hexagonal.application.domain.customer.Customer;
+import br.com.fullcycle.hexagonal.application.domain.customer.CustomerId;
+import br.com.fullcycle.hexagonal.application.domain.person.Cpf;
+import br.com.fullcycle.hexagonal.application.domain.person.Email;
 import br.com.fullcycle.hexagonal.application.repositories.CustomerRepository;
 
 import java.util.HashMap;
@@ -27,13 +29,13 @@ public class InMemoryCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public Optional<Customer> customerOfCpf(String cpf) {
-        return Optional.ofNullable(this.customersByCPF.get(cpf));
+    public Optional<Customer> customerOfCpf(Cpf cpf) {
+        return Optional.ofNullable(this.customersByCPF.get(cpf.value()));
     }
 
     @Override
-    public Optional<Customer> customerOfEmail(String email) {
-        return Optional.ofNullable(this.customersByEmail.get(email));
+    public Optional<Customer> customerOfEmail(Email email) {
+        return Optional.ofNullable(this.customersByEmail.get(email.value()));
     }
 
     @Override
@@ -50,6 +52,13 @@ public class InMemoryCustomerRepository implements CustomerRepository {
         this.customersByCPF.put(customer.getCpf().value(), customer);
         this.customersByEmail.put(customer.getEmail().value(), customer);
         return customer;
+    }
+
+    @Override
+    public void deleteAll() {
+        this.customers.clear();
+        this.customersByCPF.clear();
+        this.customersByEmail.clear();
     }
 
 }

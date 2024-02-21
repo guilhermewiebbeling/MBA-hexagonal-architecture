@@ -1,7 +1,7 @@
 package br.com.fullcycle.hexagonal.application.repositories;
 
-import br.com.fullcycle.hexagonal.application.domain.Ticket;
-import br.com.fullcycle.hexagonal.application.domain.TicketId;
+import br.com.fullcycle.hexagonal.application.domain.event.ticket.Ticket;
+import br.com.fullcycle.hexagonal.application.domain.event.ticket.TicketId;
 
 import java.util.Optional;
 
@@ -12,4 +12,6 @@ public interface TicketRepository {
     Ticket create(Ticket event);
 
     Ticket update (Ticket event);
+
+    void deleteAll();
 }

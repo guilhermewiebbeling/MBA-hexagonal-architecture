@@ -1,7 +1,9 @@
 package br.com.fullcycle.hexagonal.application.repositories;
 
-import br.com.fullcycle.hexagonal.application.domain.Partner;
-import br.com.fullcycle.hexagonal.application.domain.PartnerId;
+import br.com.fullcycle.hexagonal.application.domain.partner.Partner;
+import br.com.fullcycle.hexagonal.application.domain.partner.PartnerId;
+import br.com.fullcycle.hexagonal.application.domain.person.Cnpj;
+import br.com.fullcycle.hexagonal.application.domain.person.Email;
 
 import java.util.Optional;
 
@@ -9,11 +11,13 @@ public interface PartnerRepository {
 
     Optional<Partner> partnerOfId(PartnerId id);
 
-    Optional<Partner> partnerOfCnpj(String cnpj);
+    Optional<Partner> partnerOfCnpj(Cnpj cnpj);
 
-    Optional<Partner> partnerOfEmail(String email);
+    Optional<Partner> partnerOfEmail(Email email);
 
     Partner create(Partner partner);
 
     Partner update (Partner partner);
+
+    void deleteAll();
 }

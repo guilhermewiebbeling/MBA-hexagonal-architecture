@@ -1,7 +1,7 @@
 package br.com.fullcycle.hexagonal.application.repository;
 
-import br.com.fullcycle.hexagonal.application.domain.Event;
-import br.com.fullcycle.hexagonal.application.domain.EventId;
+import br.com.fullcycle.hexagonal.application.domain.event.Event;
+import br.com.fullcycle.hexagonal.application.domain.event.EventId;
 import br.com.fullcycle.hexagonal.application.repositories.EventRepository;
 
 import java.util.HashMap;
@@ -32,6 +32,11 @@ public class InMemoryEventRepository implements EventRepository {
     public Event update(Event event) {
         this.events.put(event.getEventId().value(), event);
         return event;
+    }
+
+    @Override
+    public void deleteAll() {
+        this.events.clear();
     }
 
 }

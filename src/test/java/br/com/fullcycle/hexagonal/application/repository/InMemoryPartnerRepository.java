@@ -1,7 +1,9 @@
 package br.com.fullcycle.hexagonal.application.repository;
 
-import br.com.fullcycle.hexagonal.application.domain.Partner;
-import br.com.fullcycle.hexagonal.application.domain.PartnerId;
+import br.com.fullcycle.hexagonal.application.domain.partner.Partner;
+import br.com.fullcycle.hexagonal.application.domain.partner.PartnerId;
+import br.com.fullcycle.hexagonal.application.domain.person.Cnpj;
+import br.com.fullcycle.hexagonal.application.domain.person.Email;
 import br.com.fullcycle.hexagonal.application.repositories.PartnerRepository;
 
 import java.util.HashMap;
@@ -27,13 +29,13 @@ public class InMemoryPartnerRepository implements PartnerRepository {
     }
 
     @Override
-    public Optional<Partner> partnerOfCnpj(String cnpj) {
-        return Optional.ofNullable(this.partnersByCNPJ.get(cnpj));
+    public Optional<Partner> partnerOfCnpj(Cnpj cnpj) {
+        return Optional.ofNullable(this.partnersByCNPJ.get(cnpj.value()));
     }
 
     @Override
-    public Optional<Partner> partnerOfEmail(String email) {
-        return Optional.ofNullable(this.partnersByEmail.get(email));
+    public Optional<Partner> partnerOfEmail(Email email) {
+        return Optional.ofNullable(this.partnersByEmail.get(email.value()));
     }
 
     @Override
@@ -50,6 +52,13 @@ public class InMemoryPartnerRepository implements PartnerRepository {
         this.partnersByCNPJ.put(partner.getCnpj().value(), partner);
         this.partnersByEmail.put(partner.getEmail().value(), partner);
         return partner;
+    }
+
+    @Override
+    public void deleteAll() {
+        this.partners.clear();
+        this.partnersByCNPJ.clear();
+        this.partnersByEmail.clear();
     }
 
 }
