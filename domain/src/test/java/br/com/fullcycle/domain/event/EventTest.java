@@ -1,7 +1,6 @@
 package br.com.fullcycle.domain.event;
 
 import br.com.fullcycle.domain.customer.Customer;
-import br.com.fullcycle.domain.event.ticket.TicketStatus;
 import br.com.fullcycle.domain.exceptions.ValidationException;
 import br.com.fullcycle.domain.partner.Partner;
 import org.junit.jupiter.api.Assertions;
@@ -62,7 +61,7 @@ public class EventTest {
         final var expectedPartnerId = aPartner.getPartnerId().value();
         final var expectedTickets = 1;
         final var expectedTicketOrder = 1;
-        final var expectedTicketStatus = TicketStatus.PENDING;
+        final var expectedDomainEvent = "event-ticket-reserved";
 
         final var actualEvent = Event.newEvent(expectedName, expectedDate, expectedTotalSpots, aPartner);
         final var expectedEventId = actualEvent.getEventId();
@@ -71,12 +70,10 @@ public class EventTest {
         final var actualTicket = actualEvent.reserveTicket(aCustomer.getCustomerId());
 
         //then
-        Assertions.assertNotNull(actualTicket.getTicketId());
-        Assertions.assertNotNull(actualTicket.getReservedAt());
-        Assertions.assertNull(actualTicket.getPaidAt());
+        Assertions.assertNotNull(actualTicket.getEventTicketId());
+        Assertions.assertNull(actualTicket.getTicketId());
         Assertions.assertEquals(expectedEventId, actualTicket.getEventId());
         Assertions.assertEquals(expectedCustomerId, actualTicket.getCustomerId());
-        Assertions.assertEquals(expectedTicketStatus, actualTicket.getStatus());
 
         Assertions.assertEquals(expectedName, actualEvent.getName().value());
         Assertions.assertEquals(expectedDate, actualEvent.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -89,6 +86,9 @@ public class EventTest {
         Assertions.assertEquals(expectedEventId, actualEventTicket.getEventId());
         Assertions.assertEquals(expectedCustomerId, actualEventTicket.getCustomerId());
         Assertions.assertEquals(actualTicket.getTicketId(), actualEventTicket.getTicketId());
+
+        final var actualDomainEvent = actualEvent.allDomainEvents().iterator().next();
+        Assertions.assertEquals(expectedDomainEvent, actualDomainEvent.type());
     }
 
     @Test

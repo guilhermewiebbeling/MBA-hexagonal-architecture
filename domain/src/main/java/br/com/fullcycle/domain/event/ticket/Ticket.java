@@ -1,11 +1,17 @@
 package br.com.fullcycle.domain.event.ticket;
 
+import br.com.fullcycle.domain.DomainEvent;
 import br.com.fullcycle.domain.customer.CustomerId;
 import br.com.fullcycle.domain.event.EventId;
+import br.com.fullcycle.domain.event.EventTicketId;
+import br.com.fullcycle.domain.event.TicketCreated;
 import br.com.fullcycle.domain.exceptions.ValidationException;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Ticket {
 
@@ -15,6 +21,7 @@ public class Ticket {
     private TicketStatus status;
     private Instant paidAt;
     private Instant reservedAt;
+    private final Set<DomainEvent> domainEvents;
 
     public Ticket(
             final TicketId ticketId,
@@ -30,10 +37,17 @@ public class Ticket {
         this.setStatus(status);
         this.setPaidAt(paidAt);
         this.setReservedAt(reservedAt);
+        this.domainEvents = new HashSet<>();
     }
 
     public static Ticket newTicket(final CustomerId customerId, final EventId eventId) {
         return new Ticket(TicketId.unique(), customerId, eventId, TicketStatus.PENDING, null, Instant.now());
+    }
+
+    public static Ticket newTicket(final EventTicketId eventTicketId, final CustomerId customerId, final EventId eventId) {
+        Ticket aTicket = newTicket(customerId, eventId);
+        aTicket.domainEvents.add(new TicketCreated(aTicket.ticketId, eventTicketId, eventId, customerId));
+        return aTicket;
     }
 
     public TicketId getTicketId() {
@@ -90,6 +104,10 @@ public class Ticket {
             throw new ValidationException("Invalid reservedAt for Ticket");
         }
         this.reservedAt = reservedAt;
+    }
+
+    public Set<DomainEvent> allDomainEvents() {
+        return Collections.unmodifiableSet(domainEvents);
     }
 
     @Override
